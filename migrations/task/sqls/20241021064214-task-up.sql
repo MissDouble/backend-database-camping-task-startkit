@@ -265,7 +265,7 @@ WHERE user_id = (
     FROM "USER" 
     WHERE email = 'wXlTq@hexschooltest.io'
 )
-GROUP BY user_id;
+GROUP BY user_id
 INNER JOIN "COURSE_BOOKING" ON "CREDIT_PURCHASE".user_id = "COURSE_BOOKING".user_id;
 
 
