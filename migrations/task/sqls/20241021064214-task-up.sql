@@ -234,6 +234,7 @@ GROUP BY user_id;
     -- from ( 用戶王小明的購買堂數 ) as "CREDIT_PURCHASE"
     -- inner join ( 用戶王小明的已使用堂數) as "COURSE_BOOKING"
     -- on "COURSE_BOOKING".user_id = "CREDIT_PURCHASE".user_id;
+
 --solution 1:
 SELECT
     user_id,
@@ -245,8 +246,7 @@ SELECT
             FROM "USER" 
             WHERE email = 'wXlTq@hexschooltest.io'
             )
-        AND status = '上課中'
-        GROUP BY user_id
+        AND status != '課程已取消'
         ) AS remaining_credit
 FROM "CREDIT_PURCHASE"
 WHERE user_id = (
@@ -257,18 +257,17 @@ WHERE user_id = (
 GROUP BY user_id;
 --solution 2:
 SELECT
-    user_id,
-    SUM("CREDIT_PURCHASE".purchased_credits)-(
-        SELECT COUNT(*) 
-        FROM "COURSE_BOOKING" 
-        WHERE status='上課中') AS remaining_credit
+    "CREDIT_PURCHASE".user_id,
+    SUM("CREDIT_PURCHASE".purchased_credits) - (
+        SELECT COUNT(*)
+        FROM "COURSE_BOOKING"
+        WHERE "COURSE_BOOKING".user_id = "CREDIT_PURCHASE".user_id
+        AND "COURSE_BOOKING".status != '課程已取消'
+    ) AS remaining_credit
 FROM "CREDIT_PURCHASE"
-WHERE user_id = (
-    SELECT id 
-    FROM "USER" 
-    WHERE email = 'wXlTq@hexschooltest.io'
-)
-GROUP BY user_id;
+INNER JOIN "USER" ON "USER".id = "CREDIT_PURCHASE".user_id
+WHERE "USER".email = 'wXlTq@hexschooltest.io'
+GROUP BY "CREDIT_PURCHASE".user_id;
 
 
 
