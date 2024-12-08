@@ -258,15 +258,17 @@ GROUP BY user_id;
 --solution 2:
 SELECT
     user_id,
-    SUM("CREDIT_PURCHASE".purchased_credits)-(SELECT COUNT(*) FROM "COURSE_BOOKING" WHERE status='上課中') AS remaining_credit
+    SUM("CREDIT_PURCHASE".purchased_credits)-(
+        SELECT COUNT(*) 
+        FROM "COURSE_BOOKING" 
+        WHERE status='上課中') AS remaining_credit
 FROM "CREDIT_PURCHASE"
 WHERE user_id = (
     SELECT id 
     FROM "USER" 
     WHERE email = 'wXlTq@hexschooltest.io'
 )
-GROUP BY user_id
-INNER JOIN "COURSE_BOOKING" ON "CREDIT_PURCHASE".user_id = "COURSE_BOOKING".user_id;
+GROUP BY user_id;
 
 
 
